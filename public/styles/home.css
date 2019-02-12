@@ -1,0 +1,19 @@
+h1 {
+    color: blueviolet;
+}
+
+body {
+    font: 10px avenir;
+  }
+  
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  
+  .browser text {
+    text-anchor: end;
+  }
+  
