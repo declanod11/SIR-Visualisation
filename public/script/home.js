@@ -1,4 +1,8 @@
   
+d3.json("data.json", function(error, data) {
+    console.log(data)
+});
+
 function get_colors(n) {
     var colors = ["#a6cee3","#1f78b4","#b2df8a","#33a02c",
     "#fb9a99","#e31a1c","#fdbf6f","#ff7f00","#cab2d6",
@@ -48,156 +52,147 @@ var svg = d3.select("body").append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
-    svg.append("text")
+svg.append("text")
     .attr("x", 0)
     .attr("y", -40)
     .attr("dy", "0.71em")
     .attr("fill", "#000")
-    .text("SFPD Incidents by Hour in Dec 2016")
+    .text("Susceptible/Infected/Recovered Chart")
     .style("font", "23px avenir")
     .style("fill", "#000000");
     
     
-        svg.append("text")
+svg.append("text")
     .attr("x", 0)
     .attr("y", 402)
     .attr("dy", "0em")
     .style("font", "12px avenir")
     .style("fill", "#000000")
-    .text("This is a plot of the 10 most frequent incidents over a 24-hour period  in San Francisco during December 2016. Interestingly enough, most ");
+    .text("This is a plot of the proportion of the population occupying each category");
     
-    svg.append("text")
-    .attr("x", 0)
-    .attr("y", 402)
-    .attr("dy", "1em")
-    .style("font", "12px avenir")
-    .style("fill", "#000000")
-    .text("categories follow a similar structure: the occurences dip in the early morning and peak during the lunch and early evening hours.");
-    
-        svg.append("text")
+svg.append("text")
     .attr("x", 0)
     .attr("y", 402)
     .attr("dy", "3em")
     .style("font", "12px avenir")
     .style("fill", "#000000")
-    .text("By Anaelia Ovalle")
+    .text("By Declan O'Donovan")
     .style("font-weight", "bold");
       
       
       
 d3.csv("data.csv", function(error, data) {
-    console.log("success")
 
-color.domain(d3.keys(data[0]).filter(function(key) {return key !== "time"; }));
+    color.domain(d3.keys(data[0]).filter(function(key) {return key !== "time"; }));
 
-data.forEach(function(d) {  
-    d.time = +d.time;
-    d.susceptible = +d.susceptible;
-    d.infected= +d.infected;
-    d.recovered= +d.recovered;
-}); 
-    
-    
+    data.forEach(function(d) {  
+        d.time = +d.time;
+        d.susceptible = +d.susceptible;
+        d.infected= +d.infected;
+        d.recovered= +d.recovered;
+    }); 
+        
+        
 
-var browsers = stack(color.domain().map(function(name) {
-return {
-    name: name,
-    values: data.map(function(d) {
-    return {time: d.time, y: d[name] * 1};
-    })
-};
-}));
-
-
-//   // Find the value of the hour with highest total value
-var maxHourVal = d3.max(data, function(d){
-var vals = d3.keys(d).map(
-    function(key){ 
-    return key !== "hour" ? d[key] : 0 });
-return d3.sum(vals);
-});
-
-//   // Set domains for axes
-x.domain(d3.extent(data, function(d) { return d.time; }));
-y.domain([0, 1])
-
-var browser = svg.selectAll(".browser")
-    .data(browsers)
-    .enter().append("g")
-    .attr("class", "browser");
-
-browser.append("path")
-    .attr("class", "area")
-    .attr("d", function(d) { return area(d.values); })
-    .style("fill", function(d,i) { 
-        return get_colors(i); });
+    var browsers = stack(color.domain().map(function(name) {
+    return {
+        name: name,
+        values: data.map(function(d) {
+        return {time: d.time, y: d[name] * 1};
+        })
+    };
+    }));
 
 
-    browser.append("text")
-    .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-    .attr("transform", function(d) { return "translate(" + x(d.value.time) + "," + y(d.value.y0 + d.value.y / 2) + ")"; })
-    .attr("x", -6)
-    .attr("dy", "-0.882em")
-    .text(function(d) { 
-            if(d.name == "susceptible"){
-        return "susceptible";
-        }
-                if(d.name == "infected"){
-        return "infected";
-        }    
-            if(d.name == "recovered"){
-        return d.name;
-        }})
-    .style("font", "15px avenir")
-        .attr("transform", function(d) { return "translate(500," + y(d.value.y0 + d.value.y / 2) + ")"; }) 
-
-svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis).append("text")
-        .attr("x", 350)
-    .attr("y", 36)
-    .attr("fill", "#000")
-    .text("Hour of Time")
-    .style("font-weight", "bold");
-
-svg.append("g")
-    .attr("class", "y axis")
-    .call(yAxis)
-    .append("text")
-    .attr("transform", "rotate(-90)")
-        .attr("x", -250)
-    .attr("y", -40)
-    .attr("dy", "0.3408em")
-    .attr("fill", "#000")
-    .text("Number of Incidents")
-        .style("font-weight", "bold");
-    
-var legend = svg.selectAll(".legend")
-        .data(color.domain()).enter()
-        .append("g")
-    .attr("class","legend")
-    .attr("transform", "translate(" + (width +20) + "," + 0+ ")");
-
-legend.append("rect")
-    .attr("x", 0) 
-    .attr("y", function(d, i) { return 20 * i; })
-    .attr("width", 10)
-    .attr("height", 10)
-    .style("fill", function(d, i) {
-        return get_colors(i);}); 
-
-legend.append("text")
-    .attr("x", 20) 
-    .attr("dy", "0.75em")
-    .attr("y", function(d, i) { return 20 * i; })
-    .text(function(d) {return d});
-    
-legend.append("text")
-    .attr("x",0) 
-//      .attr("dy", "0.75em")
-    .attr("y",-10)
-    .text("Categories");
-    
-    
+    //   // Find the value of the hour with highest total value
+    var maxHourVal = d3.max(data, function(d){
+    var vals = d3.keys(d).map(
+        function(key){ 
+        return key !== "time" ? d[key] : 0 });
+    return d3.sum(vals);
     });
+
+    //   // Set domains for axes
+    x.domain(d3.extent(data, function(d) { return d.time; }));
+    y.domain([0, 1])
+
+    var browser = svg.selectAll(".browser")
+        .data(browsers)
+        .enter().append("g")
+        .attr("class", "browser");
+
+    browser.append("path")
+        .attr("class", "area")
+        .attr("d", function(d) { return area(d.values); })
+        .style("fill", function(d,i) { 
+            return get_colors(i); });
+
+
+        browser.append("text")
+        .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
+        .attr("transform", function(d) { return "translate(" + x(d.value.time) + "," + y(d.value.y0 + d.value.y / 2) + ")"; })
+        .attr("x", -6)
+        .attr("dy", "-0.882em")
+        .text(function(d) { 
+                if(d.name == "susceptible"){
+            return "susceptible";
+            }
+                    if(d.name == "infected"){
+            return "infected";
+            }    
+                if(d.name == "recovered"){
+            return d.name;
+            }})
+        .style("font", "15px avenir")
+            .attr("transform", function(d) { return "translate(500," + y(d.value.y0 + d.value.y / 2) + ")"; }) 
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis).append("text")
+            .attr("x", 350)
+        .attr("y", 36)
+        .attr("fill", "#000")
+        .text("Time (Weeks)")
+        .style("font-weight", "bold");
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+            .attr("x", -250)
+        .attr("y", -40)
+        .attr("dy", "0.3408em")
+        .attr("fill", "#000")
+        .text("Proportion of Population")
+            .style("font-weight", "bold");
+        
+    var legend = svg.selectAll(".legend")
+            .data(color.domain()).enter()
+            .append("g")
+        .attr("class","legend")
+        .attr("transform", "translate(" + (width +20) + "," + 0+ ")");
+
+    legend.append("rect")
+        .attr("x", 0) 
+        .attr("y", function(d, i) { return 20 * i; })
+        .attr("width", 10)
+        .attr("height", 10)
+        .style("fill", function(d, i) {
+            return get_colors(i);}); 
+
+    legend.append("text")
+        .attr("x", 20) 
+        .attr("dy", "0.75em")
+        .attr("y", function(d, i) { return 20 * i; })
+        .text(function(d) {return d});
+        
+    legend.append("text")
+        .attr("x",0) 
+    //      .attr("dy", "0.75em")
+        .attr("y",-10)
+        .text("Categories");
+    
+    
+});
