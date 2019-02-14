@@ -1,6 +1,6 @@
   
 d3.json("data.json", function(error, data) {
-    console.log(data)
+    // console.log(data)
 });
 
 function get_colors(n) {
@@ -79,9 +79,106 @@ svg.append("text")
     .text("By Declan O'Donovan")
     .style("font-weight", "bold");
       
+// var slider_s = d3.select("body").append("svg")
+//     .attr("width",50)
+//     .attr("height",500)
       
-      
-d3.csv("data.csv", function(error, data) {
+// var y_s = d3.scale.linear()
+//     .domain([20, 0])
+//     .range([0, 500])
+//     .clamp(true);
+
+// var brush = d3.svg.brush()
+//     .y(y_s)
+//     .extent([0, 0])
+//     .on("brush", brushed);
+
+// var g = slider_s.append("g")
+//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// var slider = g.append("g")
+//     .attr("transform", "translate(" + 20 + ", 0)");
+
+// slider.append("g")
+//     .attr("class", "y axis")
+//     .call(d3.svg.axis()
+//             .scale(y_s)
+//             .orient("right")
+//             .tickFormat(function(d) { return d + "°"; })
+//             .tickSize(0)
+//             .tickPadding(13))
+//     .select(".domain")
+//     .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+//     .attr("class", "halo");
+
+// var prevVal = 0;
+// var handle = slider.append("path")
+//     .attr("class", "handle")
+//     .attr("d", "M-7 -4 L-7 4 L-5 6 L5 6 L11 0 L5 -6 L-5 -6 Z")
+//     .attr("transform", "translate(0, " + y(prevVal) + ")");
+
+// d3.select("body")
+//     .style("background-color", d3.hsl(y(prevVal), .8, .8));
+
+// var ruler = slider.append("g")
+//     .attr("transform", "translate(-4, 0)")
+//     .attr("class", "ruler")
+//     .call(brush);
+
+// ruler.selectAll(".extent,.resize")
+//     .remove();
+
+// ruler.select(".background")
+//     .style("cursor", "ns-resize")
+//     .attr("width", 20);
+
+// // initial animation
+// ruler.call(brush.event)
+//     .transition()
+//     .duration(750)
+//     .ease("out-in")
+//     .call(brush.extent([120, 120]))
+//     .call(brush.event);
+
+// function brushed() {
+// var value = brush.extent()[1],
+//     t = d3;
+
+// if (d3.event.sourceEvent) { // not a programmatic event
+//     value = y.invert(d3.mouse(this)[1]);
+//     brush.extent([value, value]);
+//     if (d3.event.sourceEvent.type === "mousemove") {
+//         // interrupt transition
+//         handle.interrupt();
+//         d3.select("body").interrupt();
+//     } else if (value != prevVal) {
+//         // animate when is't a click, not a drag
+//         t = d3.transition()
+//                 .duration(Math.abs(y(value) - y(prevVal)))
+//                 .ease("out-in");
+//     }
+// }
+
+// t.select(".handle")
+//     .attr("transform", "translate(0, " + y(value) + ")");
+// t.select("body")
+//     .style("background-color", d3.hsl(value, .8, .8));
+
+// prevVal = value;
+// }
+
+function startAgain(data1,i){
+    
+}
+
+
+function dispData(data1,i){
+    var data= data1.splice(105*(i-1),105);
+    
+    $("#disp_params").change(function() {
+        startAgain(data1,$("#disp_params").val())
+    });
+    // console.log(data)
 
     color.domain(d3.keys(data[0]).filter(function(key) {return key !== "time"; }));
 
@@ -175,7 +272,7 @@ d3.csv("data.csv", function(error, data) {
         .attr("transform", "translate(" + (width +20) + "," + 0+ ")");
 
     legend.append("rect")
-        .attr("x", 0) 
+        .attr("x", 20) 
         .attr("y", function(d, i) { return 20 * i; })
         .attr("width", 10)
         .attr("height", 10)
@@ -183,7 +280,7 @@ d3.csv("data.csv", function(error, data) {
             return get_colors(i);}); 
 
     legend.append("text")
-        .attr("x", 20) 
+        .attr("x", 40) 
         .attr("dy", "0.75em")
         .attr("y", function(d, i) { return 20 * i; })
         .text(function(d) {return d});
@@ -195,4 +292,11 @@ d3.csv("data.csv", function(error, data) {
         .text("Categories");
     
     
+};
+
+d3.csv("data2.csv", function(error, data1) {
+
+    dispData(data1,1);
+    
 });
+
