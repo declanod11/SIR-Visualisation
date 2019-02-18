@@ -17,3 +17,8 @@ body {
     text-anchor: end;
   }
   
+.line {
+  stroke: black;
+  fill: none;
+  stroke-width: 3;
+}
