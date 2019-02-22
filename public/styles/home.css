@@ -4,21 +4,51 @@ h1 {
 
 body {
     font: 10px avenir;
-  }
-  
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-  
-  .browser text {
-    text-anchor: end;
-  }
-  
-.line {
-  stroke: black;
-  fill: none;
-  stroke-width: 3;
 }
+
+p {
+  float: left;
+}
+
+svg {
+  float: left;
+}
+  
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.axis text {
+  fill: black;
+  /* stroke: black; */
+}
+
+.browser text {
+  text-anchor: end;
+}
+
+.line {
+  stroke: #1f77b4;
+  fill: none;
+  stroke-width: 4;
+}
+ 
+ #slider-2{
+  margin-left: 60px;
+  margin-right: 60px;
+  float:left; 
+ }
+ 
+ #slider-1{
+  margin-left: 60px;
+  margin-right: 60px;
+  float:left; 
+ }
+
+ #slider-3{
+  margin-left: 20px;
+  margin-right: 20px;
+  float:left; 
+ }
