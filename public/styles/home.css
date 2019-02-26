@@ -29,8 +29,18 @@ svg {
   text-anchor: end;
 }
 
-.line {
+.paramText {
+  font-size: 11px;
+}
+
+.line1 {
   stroke: #1f77b4;
+  fill: none;
+  stroke-width: 4;
+}
+
+.line2 {
+  stroke: green;
   fill: none;
   stroke-width: 4;
 }
