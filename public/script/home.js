@@ -136,10 +136,10 @@ var t = d3.transition()
     .ease(d3.easeLinear);
 
 var xScale = d3.scaleLinear()
-        .domain([1, 105])
+        .domain([1, 210])
         .range([0, width]),
     yScale = d3.scaleLinear()
-        .domain([0, 0.15])
+        .domain([0, 0.25])
         .range([height, 0]),
     g = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
@@ -156,7 +156,7 @@ g.append("g")
 
 g.append("g")
     .attr("class", "axis yAxis")
-    .call(d3.axisLeft(yScale).ticks(3, "%"))
+    .call(d3.axisLeft(yScale).ticks(5, "%"))
     .append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", -50)
@@ -219,15 +219,15 @@ function createSlider(slider, boundTextField, max_val) {
         value: 0,
         slide: function( event, ui ) {
             // message="alpha_0 = " + (ui.value/8).toString(10);
-            boundTextField.val(ui.value/8);
+            boundTextField.val(ui.value);
             full_data.then(render)
         }
     })
 }
 
 $(function() {
-    createSlider($( "#slider-1" ), $( "#amount1" ), 145);
-    createSlider($( "#slider-2" ), $( "#amount2" ), 7);
+    createSlider($( "#slider-1" ), $( "#amount1" ), 360);
+    createSlider($( "#slider-2" ), $( "#amount2" ), 42);
    
 });
 
@@ -248,6 +248,7 @@ function render(data){
                 b1f= d[k].b1f.toString(),
                 b0r= d[k].b0r.toString(),
                 b1r= d[k].b1r.toString();
+                omf= Math.round(1/d[k].omegaf).toString();
             f_params = "Flu: beta0 = " + b0f + " , beta1 = " + b1f;
             r_params = "RSV: beta0 = " + b0r + " , beta1 = " + b1r;
         g.append("text")
@@ -258,37 +259,46 @@ function render(data){
         g.append("text")
             .attr("class", "paramText")
             .attr("y", 50)
+            .attr("x", width-95)
+            .text("1/omega_f = " + omf)
+        g.append("text")
+            .attr("class", "paramText")
+            .attr("y", 85)
             .attr("x", width-120)
             .text(r_params)
+        
     });
     
     // setInterval(function() {
     //     if(i<248){
     //         path.attr("class", "line")
-    //             .attr("d", line(data.slice((i)*105,(i+1)*105)));
+    //             .attr("d", line(data.slice((i)*210,(i+1)*210)));
     //         console.log(i)
     //         i=i+1;
     //     }else{
     //         i=0;
     //         path.attr("class", "line")
-    //             .attr("d", line(data.slice((i)*105,(i+1)*105)));
+    //             .attr("d", line(data.slice((i)*210,(i+1)*210)));
     //         i=i+1
     //     }
     // }, 500);
-    data_set = j + k; 
+    data_set = 10*j + k; 
 
     path1.attr("class", "line1")
-        .attr("d", line1(data.slice(data_set*105,(data_set+1)*105)));
+        .attr("d", line1(data.slice(data_set*210,(data_set+1)*210)));
     path2.attr("class", "line2")
-        .attr("d", line2(data.slice(data_set*105,(data_set+1)*105)));
+        .attr("d", line2(data.slice(data_set*210,(data_set+1)*210)));
 }
-var param_keys = d3.csv("keys_twoD.csv").then(function(d){
+var param_keys = d3.csv("keys.csv").then(function(d){
     return d
 });
 
-var full_data = d3.csv("data_twoD.csv").then(function(d){
+var full_data = d3.csv("data.csv").then(function(d){
     render(d);
     return d
 });
 
 
+// cd Documents/School/Code/Honours
+// mu,N,T,b0f,b1f,phif,sigmaf,gammaf,omegaf,alphaf,b0r,b1r,phir,sigmar,gammar,omegar,alphar
+// group,time,IFlu,IRSV
